@@ -12,22 +12,7 @@ class Database {
         }).promise();
     }
 
-    // async selecionarSkins() {
-    //     const skinsData = await this.#connection.query("SELECT * FROM skins;");
-    //     return skinsData[0];
-    // } 
-      // async insertSkin(categoria, nome, descricao, genero, valor, raridade, foto1, foto2, promocao) {
-    //     const sql = `
-    //         INSERT INTO skins (categoria, nome_skin, desc_skin,
-    //             genero_skin, valor_skin, raridade_skin, foto1_skin, foto2_skin,
-    //             promocao_id_promocao1) 
-    //         VALUES ('${categoria}', '${nome}', '${descricao}', '${genero}',
-    //             ${valor}, '${raridade}', '${foto1}', '${foto2}', ${promocao});
-    //     `;
-
-    //     const bd = await this.#connection.execute(sql);
-    //     return bd[0];
-    // }
+    
 
     async selecionarCupons(){
         const cuponsData = await this.#connection.query("select * from cupons;")
@@ -119,40 +104,51 @@ class Database {
         return dtbs[0]
     }
 
-//      async selectAtrativos(){
-//         const query = await this.#connection.query("select * from atrativos")
-//         return query[0]
-//      }
-//      async selectAtrativosId(id){
-//         const query = await this.#connection.query("select * from atrativos where id_atrativo =" +id)
-//         return query[0]
-//      }
-//      async insertAtrativo (param) {
-//         const sql = `insert into atrativos (nome_atrativo, lat_atrativo, long_atrativo, desc_atrativo, image_atrativo) 
-//                     values ( '${param.nome} ',  '${param.latitude} ',  '${param.longitude} ',  '${param.descricao} ', '${param.imagem} ')`
-//         const query = await this.#connection.execute(sql) 
-//         return query[0]
-//      }
+    //
+    async selecionarPromos() {
+        const promosData = await this.#connection.query("SELECT * FROM promocoes;");
+        return promosData[0];
+    }
+    async selecionarPromocaoId(id) {
+        const promocaoData = await this.#connection.query("select * from promocoes where id_promocao ="+id)
+        return promocaoData[0]
+    }
+    async updatePromocao(nome, start, end, desc, ativa, id) {
+  
+        const sql = `update promocoes
+            set nome_promocao = "${nome}",
+            dt_start_promocao = "${start}",
+            dt_end_promocao = "${end}",
+            descr_promocao = "${desc}",
+            ativa_promocao = ${ativa}
+            where id_promocao  = ${id}`
 
-//      async deleteAtrativo(id){
-//         const sql = 'delete from atrativos where id_atrativo =' +id
+        const dtbs = await this.#connection.execute(sql)
+        return dtbs[0]
+    }
 
-//         const res = await this.#connection.execute(sql)
-//         console.log(res)
-//         return res[0]
-//      }
-//      async updateAtrativo(nome, lat, long, desc, image, id){
-//         const sql = `update atrativos
-//         set nome_atrativo  = "${nome}",
-//             lat_atrativo   = "${lat}",
-//             long_atrativo  = "${long}",
-//             desc_atrativo  = "${desc}",
-//             image_atrativo = "${image}",
-//             id_atrativo    = "${id}"
-//         `
-//         const r = await this.#connection.execute(sql)
-//         return[0]
-//      }
+
+    async insertPromo(nome, start, end, desc, ativa) {
+
+        const sql = `
+            INSERT INTO promocoes (dt_start_promocao, dt_end_promocao, nome_promocao, descr_promocao, ativa_promocao)
+            VALUES ('${start}', '${end}', '${nome}', '${desc}', '0');
+        `;
+        const bd = await this.#connection.execute(sql);
+        return bd[0];
+    }
+
+    async deletePromo(id) {
+        const sql = `
+            DELETE FROM promocoes
+            WHERE id_promocao = ${id};
+        `;
+
+        const dt = await this.#connection.execute(sql);
+        return dt[0];
+    }
+
+
  }
 
 module.exports = Database;
